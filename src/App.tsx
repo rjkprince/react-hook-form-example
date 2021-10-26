@@ -1,11 +1,11 @@
 import React from "react";
-import Form from "./container/Form";
+import NewForm from "./container/NewForm";
 import logo from "./logo.svg";
 
 function App() {
   return (
     <div className="App">
-      <Form />
+      <NewForm />
     </div>
   );
 }

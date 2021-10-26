@@ -25,11 +25,6 @@ h1 {
   margin: 0 auto;
 }
 
-button[type="button"] {
-  background: black;
-  border: 1px solid white;
-}
-
 p {
   color: #bf1650;
   text-align: center;
@@ -66,9 +61,21 @@ input {
   align-items: center;
 }
 
+.dynamic-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .add-icon,
 .remove-icon {
   cursor: pointer;
+}
+
+.add-btn,
+.remove-btn {
+  cursor: pointer;
+  padding: 8px 15px;
 }
 
 .IceCreamType {
@@ -86,7 +93,6 @@ label {
   font-weight: 200;
 }
 
-button,
 input[type="submit"] {
   background: #ec5990;
   color: white;
@@ -99,18 +105,10 @@ input[type="submit"] {
   letter-spacing: 10px;
 }
 
-button {
-  display: block;
-  appearance: none;
-  border-radius: 4px;
-  width: 100%;
-}
-
 input[type="submit"]:hover {
   background: #bf1650;
 }
 
-input[type="button"]:active,
 input[type="submit"]:active {
   transition: 0.3s all;
   transform: translateY(3px);
@@ -122,11 +120,6 @@ input:disabled {
   opacity: 0.4;
 }
 
-input[type="button"]:hover {
-  transition: 0.3s all;
-}
-
-input[type="button"],
 input[type="submit"] {
   -webkit-appearance: none;
 }
@@ -155,4 +148,16 @@ form {
   position: fixed;
   top: 20px;
   right: 20px;
+}
+
+.checkboxDiv,
+.radioDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checkboxDiv input,
+.radioDiv input {
+  width: 30px;
+  margin-top: 20px;
 }
