@@ -21,11 +21,6 @@ interface IFormInput {
   Checkbox: boolean;
 }
 
-enum DynamicFields {
-  EmailField,
-  PhoneField,
-}
-
 const Form = () => {
   const { control, handleSubmit } = useForm<IFormInput>({
     defaultValues: {
@@ -33,8 +28,7 @@ const Form = () => {
       phones: [{ phone: "" }],
     },
   });
-  const [emailFieldsNum, setEmailFieldsNum] = useState(1);
-  const [phoneFieldsNum, setPhoneFieldsNum] = useState(1);
+
   const {
     fields: emailFields,
     append: appendEmailField,
@@ -55,17 +49,6 @@ const Form = () => {
 
   const onSubmit = (data: IFormInput) => {
     alert(JSON.stringify(data));
-  };
-
-  const addFieldHandler = (field: DynamicFields) => {
-    switch (field) {
-      case DynamicFields.EmailField:
-        setEmailFieldsNum((prev) => prev + 1);
-        break;
-      case DynamicFields.PhoneField:
-        setPhoneFieldsNum((prev) => prev + 1);
-        break;
-    }
   };
 
   return (
