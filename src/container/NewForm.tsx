@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import {
-  Checkbox,
-  Input,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
-  InputAdornment,
-} from "@mui/material";
-import { AddCircleOutline, RemoveCircleOutline } from "@mui/icons-material";
 
 interface IFormInput {
   firstName: string;
