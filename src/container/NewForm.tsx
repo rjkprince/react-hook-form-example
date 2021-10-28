@@ -12,6 +12,8 @@ interface IFormInput {
   iceCreamType: { label: string; value: string };
   game: { label: string; value: string }[];
   Checkbox: boolean;
+  isVehicle: boolean;
+  vehicleNumber: string;
 }
 
 const NewForm = () => {
@@ -20,6 +22,8 @@ const NewForm = () => {
     handleSubmit,
     register,
     formState: { errors },
+    getValues,
+    watch,
   } = useForm<IFormInput>({
     defaultValues: {
       emails: [{ email: "" }],
@@ -329,6 +333,60 @@ const NewForm = () => {
         control={control}
         defaultValue={undefined}
       />
+
+      <Controller
+        name="isVehicle"
+        control={control}
+        render={({ field }) => {
+          const { name, onBlur, onChange, value } = field;
+          return (
+            <>
+              <div className="checkboxDiv">
+                <input
+                  type="checkbox"
+                  name={name}
+                  onBlur={onBlur}
+                  onChange={onChange}
+                  checked={value}
+                />
+                <p>Do you have a vehicle?</p>
+              </div>
+            </>
+          );
+        }}
+      />
+
+      {watch("isVehicle") && (
+        <>
+          <label>Vehicle Number</label>
+          <Controller
+            render={({ field }) => (
+              <>
+                {" "}
+                <input
+                  {...register("vehicleNumber", {
+                    required: true,
+                    maxLength: 30,
+                  })}
+                  {...field}
+                />
+                {errors?.firstName?.type === "required" && (
+                  <p className="error">This field is required</p>
+                )}
+                {errors?.firstName?.type === "maxLength" && (
+                  <p className="error">
+                    Vehicle number cannot exceed 30 characters
+                  </p>
+                )}
+              </>
+            )}
+            name="vehicleNumber"
+            control={control}
+            defaultValue=""
+          />
+        </>
+      )}
+
       <Controller
         name="Checkbox"
         control={control}
@@ -356,7 +414,6 @@ const NewForm = () => {
           );
         }}
       />
-
       <input type="submit" />
     </form>
   );
