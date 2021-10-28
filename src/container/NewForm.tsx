@@ -22,7 +22,7 @@ const NewForm = () => {
     handleSubmit,
     register,
     formState: { errors },
-    getValues,
+    setValue,
     watch,
   } = useForm<IFormInput>({
     defaultValues: {
@@ -346,7 +346,10 @@ const NewForm = () => {
                   type="checkbox"
                   name={name}
                   onBlur={onBlur}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    onChange(e);
+                    setValue("vehicleNumber", "");
+                  }}
                   checked={value}
                 />
                 <p>Do you have a vehicle?</p>
@@ -370,10 +373,10 @@ const NewForm = () => {
                   })}
                   {...field}
                 />
-                {errors?.firstName?.type === "required" && (
+                {errors?.vehicleNumber?.type === "required" && (
                   <p className="error">This field is required</p>
                 )}
-                {errors?.firstName?.type === "maxLength" && (
+                {errors?.vehicleNumber?.type === "maxLength" && (
                   <p className="error">
                     Vehicle number cannot exceed 30 characters
                   </p>
