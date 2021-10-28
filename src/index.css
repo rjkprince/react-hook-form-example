@@ -30,6 +30,12 @@ p {
   text-align: center;
 }
 
+.error {
+  color: #ff0000;
+  margin-top: 0;
+  text-align: left;
+}
+
 input {
   display: block;
   box-sizing: border-box;
@@ -159,5 +165,9 @@ form {
 .checkboxDiv input,
 .radioDiv input {
   width: 30px;
+  margin-top: 20px;
+}
+
+.gameSelect {
   margin-top: 20px;
 }

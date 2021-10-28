@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
+import RDSelect from "react-dropdown-select";
 
 interface IFormInput {
   firstName: string;
@@ -9,11 +10,17 @@ interface IFormInput {
   emails: { email: string }[];
   phones: { phone: string }[];
   iceCreamType: { label: string; value: string };
+  game: { label: string; value: string }[];
   Checkbox: boolean;
 }
 
 const NewForm = () => {
-  const { control, handleSubmit } = useForm<IFormInput>({
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<IFormInput>({
     defaultValues: {
       emails: [{ email: "" }],
       phones: [{ phone: "" }],
@@ -46,14 +53,56 @@ const NewForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <label>First Name</label>
       <Controller
-        render={({ field }) => <input {...field} />}
+        render={({ field }) => (
+          <>
+            {" "}
+            <input
+              {...register("firstName", {
+                required: true,
+                maxLength: 20,
+                pattern: /^[A-Za-z]+$/i,
+              })}
+              {...field}
+            />
+            {errors?.firstName?.type === "required" && (
+              <p className="error">This field is required</p>
+            )}
+            {errors?.firstName?.type === "maxLength" && (
+              <p className="error">First name cannot exceed 20 characters</p>
+            )}
+            {errors?.firstName?.type === "pattern" && (
+              <p className="error">Alphabetical characters only</p>
+            )}
+          </>
+        )}
         name="firstName"
         control={control}
         defaultValue=""
       />
       <label>Last Name</label>
       <Controller
-        render={({ field }) => <input {...field} />}
+        render={({ field }) => (
+          <>
+            {" "}
+            <input
+              {...register("lastName", {
+                required: true,
+                maxLength: 20,
+                pattern: /^[A-Za-z]+$/i,
+              })}
+              {...field}
+            />
+            {errors?.lastName?.type === "required" && (
+              <p className="error">This field is required</p>
+            )}
+            {errors?.lastName?.type === "maxLength" && (
+              <p className="error">Last name cannot exceed 20 characters</p>
+            )}
+            {errors?.lastName?.type === "pattern" && (
+              <p className="error">Alphabetical characters only</p>
+            )}
+          </>
+        )}
         name="lastName"
         control={control}
         defaultValue=""
@@ -63,32 +112,46 @@ const NewForm = () => {
         render={({ field }) => {
           const { name, onBlur, onChange, value } = field;
           return (
-            <div className="radioDiv">
-              <input
-                type="radio"
-                name={name}
-                value="Male"
-                onChange={onChange}
-                checked={value === "Male"}
-              />{" "}
-              <p>Male</p>
-              <input
-                type="radio"
-                name={name}
-                value="Female"
-                onChange={onChange}
-                checked={value === "Female"}
-              />{" "}
-              <p>Female</p>
-              <input
-                type="radio"
-                name={name}
-                value="Other"
-                onChange={onChange}
-                checked={value === "Other"}
-              />{" "}
-              <p>Other</p>
-            </div>
+            <>
+              <div className="radioDiv">
+                <input
+                  {...register("gender", {
+                    required: true,
+                  })}
+                  type="radio"
+                  name={name}
+                  value="Male"
+                  onChange={onChange}
+                  checked={value === "Male"}
+                />{" "}
+                <p>Male</p>
+                <input
+                  {...register("gender", {
+                    required: true,
+                  })}
+                  type="radio"
+                  name={name}
+                  value="Female"
+                  onChange={onChange}
+                  checked={value === "Female"}
+                />{" "}
+                <p>Female</p>
+                <input
+                  {...register("gender", {
+                    required: true,
+                  })}
+                  type="radio"
+                  name={name}
+                  value="Other"
+                  onChange={onChange}
+                  checked={value === "Other"}
+                />{" "}
+                <p>Other</p>
+              </div>
+              {errors?.gender?.type === "required" && (
+                <p className="error">This field is required</p>
+              )}
+            </>
           );
         }}
         name="gender"
@@ -111,20 +174,42 @@ const NewForm = () => {
         <Controller
           key={item.id}
           render={({ field }) => (
-            <div className="dynamic-field">
-              <input {...field} />
-              {emailFields.length > 1 ? (
-                <button
-                  className="remove-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    removeEmailField(index);
-                  }}
-                >
-                  Delete
-                </button>
-              ) : null}
-            </div>
+            <>
+              <div className="dynamic-field">
+                <input
+                  {...register(`emails.${index}.email`, {
+                    required: true,
+                    maxLength: 50,
+                    pattern:
+                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  })}
+                  {...field}
+                />
+                {emailFields.length > 1 ? (
+                  <button
+                    className="remove-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removeEmailField(index);
+                    }}
+                  >
+                    Delete
+                  </button>
+                ) : null}
+              </div>
+              {errors?.emails &&
+                errors?.emails[index]?.email?.type === "required" && (
+                  <p className="error">This field is required</p>
+                )}
+              {errors?.emails &&
+                errors?.emails[index]?.email?.type === "maxLength" && (
+                  <p className="error">Email cannot exceed 50 characters</p>
+                )}
+              {errors?.emails &&
+                errors?.emails[index]?.email?.type === "pattern" && (
+                  <p className="error">Invalid Email</p>
+                )}
+            </>
           )}
           name={`emails.${index}.email`}
           control={control}
@@ -146,20 +231,36 @@ const NewForm = () => {
         <Controller
           key={item.id}
           render={({ field }) => (
-            <div className="dynamic-field">
-              <input {...field} />
-              {phoneFields.length > 1 ? (
-                <button
-                  className="remove-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    removePhoneField(index);
-                  }}
-                >
-                  Delete
-                </button>
-              ) : null}
-            </div>
+            <>
+              <div className="dynamic-field">
+                <input
+                  {...register(`phones.${index}.phone`, {
+                    required: true,
+                    pattern: /^\d{10}$/,
+                  })}
+                  {...field}
+                />
+                {phoneFields.length > 1 ? (
+                  <button
+                    className="remove-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removePhoneField(index);
+                    }}
+                  >
+                    Delete
+                  </button>
+                ) : null}
+              </div>
+              {errors?.phones &&
+                errors?.phones[index]?.phone?.type === "required" && (
+                  <p className="error">This field is required</p>
+                )}
+              {errors?.phones &&
+                errors?.phones[index]?.phone?.type === "pattern" && (
+                  <p className="error">10 digits numeric values only</p>
+                )}
+            </>
           )}
           name={`phones.${index}.phone`}
           control={control}
@@ -169,17 +270,62 @@ const NewForm = () => {
       <Controller
         name="iceCreamType"
         render={({ field }) => (
-          <Select
-            {...field}
-            isClearable
-            isMulti
-            options={[
-              { value: "chocolate", label: "Chocolate" },
-              { value: "strawberry", label: "Strawberry" },
-              { value: "vanilla", label: "Vanilla" },
-            ]}
-          />
+          <>
+            <Select
+              {...register("iceCreamType", {
+                required: true,
+              })}
+              {...field}
+              isClearable
+              isMulti
+              options={[
+                { value: "chocolate", label: "Chocolate" },
+                { value: "strawberry", label: "Strawberry" },
+                { value: "vanilla", label: "Vanilla" },
+              ]}
+            />
+            {
+              // @ts-ignore:next-line
+              errors?.iceCreamType?.type === "required" && (
+                <p className="error">This field is required</p>
+              )
+            }
+          </>
         )}
+        control={control}
+        defaultValue={undefined}
+      />
+      <Controller
+        name="game"
+        render={({ field }) => {
+          const { name, onBlur, onChange, value } = field;
+          return (
+            <div className="gameSelect">
+              <RDSelect
+                {...register("game", {
+                  required: true,
+                })}
+                name={name}
+                onDropdownClose={onBlur}
+                onChange={onChange}
+                values={value}
+                clearable
+                multi
+                options={[
+                  { value: "cricket", label: "Cricket" },
+                  { value: "football", label: "Football" },
+                  { value: "tennis", label: "Tennis" },
+                ]}
+              />
+              {
+                // @ts-ignore:next-line
+                errors?.game?.type === "required" && (
+                  <p className="error">This field is required</p>
+                )
+              }
+            </div>
+          );
+        }}
         control={control}
         defaultValue={undefined}
       />
@@ -189,16 +335,24 @@ const NewForm = () => {
         render={({ field }) => {
           const { name, onBlur, onChange, value } = field;
           return (
-            <div className="checkboxDiv">
-              <input
-                type="checkbox"
-                name={name}
-                onBlur={onBlur}
-                onChange={onChange}
-                checked={value}
-              />
-              <p>I accept the Terms and Conditions</p>
-            </div>
+            <>
+              <div className="checkboxDiv">
+                <input
+                  {...register("Checkbox", {
+                    required: true,
+                  })}
+                  type="checkbox"
+                  name={name}
+                  onBlur={onBlur}
+                  onChange={onChange}
+                  checked={value}
+                />
+                <p>I accept the Terms and Conditions</p>
+              </div>
+              {errors?.Checkbox?.type === "required" && (
+                <p className="error">This field is required</p>
+              )}
+            </>
           );
         }}
       />
