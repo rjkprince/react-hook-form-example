@@ -130,11 +130,6 @@ input[type="submit"] {
   -webkit-appearance: none;
 }
 
-.App {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
 form {
   margin-bottom: 400px;
 }
@@ -170,4 +165,9 @@ form {
 
 .gameSelect {
   margin-top: 20px;
+}
+
+.RBTable {
+  font-family: sans-serif;
+  text-align: center;
 }
